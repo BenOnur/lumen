@@ -28,6 +28,9 @@ dist/
 build/
 coverage/
 .cache/
+cache/
+tools/
+desktop-dist/
 .vite/
 .turbo/
 *.tsbuildinfo

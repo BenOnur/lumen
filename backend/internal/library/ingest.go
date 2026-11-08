@@ -56,16 +56,15 @@ func (s *Store) IngestFingerprints(ctx context.Context, roots []string) (map[str
 		// Ingest preserves relative MUSIC_PATH values in the database, while
 		// the scanner compares absolute paths. Load both representations.
 		rel, err := filepath.Rel(cwd, abs)
-		if err != nil {
-			return nil, err
-		}
-		if rel == "." {
-			// Files directly under cwd have no directory prefix. Scope the
-			// resulting candidates against absolute roots below.
-			prefixes = append(prefixes, "")
-		} else {
-			rel += string(filepath.Separator)
-			prefixes = append(prefixes, rel, "."+string(filepath.Separator)+rel)
+		if err == nil {
+			if rel == "." {
+				// Files directly under cwd have no directory prefix. Scope the
+				// resulting candidates against absolute roots below.
+				prefixes = append(prefixes, "")
+			} else {
+				rel += string(filepath.Separator)
+				prefixes = append(prefixes, rel, "."+string(filepath.Separator)+rel)
+			}
 		}
 	}
 	rows, err := s.db.Query(ctx, `
